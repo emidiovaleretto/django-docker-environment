@@ -15,21 +15,21 @@ WORKDIR /root
 EXPOSE 8000
 
 
-RUN python -m venv venv && \
-    /venv/Scripts/pip.exe install --upgrade pip && \
-    /venv/Scripts/pip.exe install -r /root/requirements.txt \
+RUN python3 -m venv /venv && \
+    /venv/bin/pip install --upgrade pip && \
+    /venv/bin/pip install -r /root/requirements.txt && \
     adduser --disabled-password --no-create-home duser && \
     mkdir -p /data/app/static && \
     mkdir -p /data/app/media && \
     chown -R duser:duser /venv && \
     chown -R duser:duser /data/app/static && \
     chown -R duser:duser /data/app/media && \
-    chown -R 755 /data/app/static && \
-    chown -R 755 /data/app/media && \
-    chmod +x /scripts
+    chmod -R 755 /data/app/static && \
+    chmod -R 755 /data/app/media && \
+    chmod -R +x /scripts
 
 # Add scripts folder and venv/bin to the container PATH
-ENV PATH="/scripts/venv/bin:$PATH"
+ENV PATH="/scripts:/venv/bin:$PATH"
 
 # Change to the non-root user
 USER duser
