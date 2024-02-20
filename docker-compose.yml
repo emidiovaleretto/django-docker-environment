@@ -9,8 +9,8 @@ services:
       - 8000:8000
     volumes:
       - ./app:/app
-      - .data/app/static:/app/static
-      - .data/app/media:/app/media
+      - ./data/app/static:/app/static
+      - ./data/app/media:/app/media
     env_file: ./root/.env
     depends_on:
       - postgres
@@ -19,7 +19,7 @@ services:
     container_name: postgres
     image: postgres:13-alpine
     volumes:
-      - .data/postgres:/var/lib/postgresql/data
+      - ./data/postgres:/var/lib/postgresql/data
     ports:
       - 5432:5432
     env_file:

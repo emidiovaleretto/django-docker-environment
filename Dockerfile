@@ -1,12 +1,12 @@
 FROM python:3.11.3-alpine3.18
-LABEL mantainer="emidio.valereto@gmail.com"
+LABEL maintainer="emidio.valereto@gmail.com"
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
 # Copy the root folders and scripts into the container
-COPY ./root /root
-COPY ./scripts /scripts
+COPY root /root
+COPY scripts /scripts
 
 # Set the working directory in the container
 WORKDIR /root
@@ -14,25 +14,29 @@ WORKDIR /root
 # Set Django port
 EXPOSE 8000
 
+# Add a user without home directory
+RUN adduser --disabled-password --no-create-home duser
 
-RUN python3 -m venv /venv && \
+# Create necessary directories with correct permissions
+RUN mkdir -p /data/app/static /data/app/media /venv \
+    && chown -R duser:duser /data/app/static /data/app/media /venv \
+    && chmod -R 755 /data/app/static /data/app/media /venv
+
+# Install Python dependencies
+RUN python -m venv /venv && \
     /venv/bin/pip install --upgrade pip && \
     /venv/bin/pip install -r /root/requirements.txt && \
-    adduser --disabled-password --no-create-home duser && \
-    mkdir -p /data/app/static && \
-    mkdir -p /data/app/media && \
-    chown -R duser:duser /venv && \
-    chown -R duser:duser /data/app/static && \
-    chown -R duser:duser /data/app/media && \
-    chmod -R 755 /data/app/static && \
-    chmod -R 755 /data/app/media && \
-    chmod -R +x /scripts
+    chown -R duser:duser /venv /root
 
 # Add scripts folder and venv/bin to the container PATH
 ENV PATH="/scripts:/venv/bin:$PATH"
+
+# Copy the commands.sh script and set permissions
+COPY scripts/commands.sh /scripts/commands.sh
+RUN chmod +x /scripts/commands.sh
 
 # Change to the non-root user
 USER duser
 
 # Run the commands.sh script
-CMD ["commands.sh"]
+CMD ["/bin/sh", "/scripts/commands.sh"]
