@@ -30,8 +30,12 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 DEBUG = True
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS")
+
 if ALLOWED_HOSTS is not None:
     ALLOWED_HOSTS = [host.strip() for host in ALLOWED_HOSTS.split(",")]
+    INTERNAL_IPS = ALLOWED_HOSTS
+
+CSRF_TRUSTED_ORIGINS = ["https://8000-emidiovaler-djangodocke-s1oxfsljchp.ws-eu108.gitpod.io"]
 
 # Application definition
 
@@ -43,13 +47,21 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'blog',
+
+    # Tailwind css
+    'tailwind',
+    'theme',
+    'django_browser_reload',
 ]
+
+TAILWIND_APP_NAME = 'theme'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django_browser_reload.middleware.BrowserReloadMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
