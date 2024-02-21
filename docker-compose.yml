@@ -1,16 +1,16 @@
 version: '3.9'
 
 services:
-  app:
-    container_name: app
+  root:
+    container_name: root
     build:
       context: .
     ports:
       - 8000:8000
     volumes:
-      - ./app:/app
-      - ./data/app/static:/app/static
-      - ./data/app/media:/app/media
+      - ./root:/root
+      - ./data/app/static:/data/app/static
+      - ./data/app/media:/data/app/media
     env_file: ./root/.env
     depends_on:
       - postgres
