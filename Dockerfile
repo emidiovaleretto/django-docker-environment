@@ -16,7 +16,8 @@ EXPOSE 8000
 
 # Create necessary directories with correct permissions
 # Install Python dependences
-RUN python -m venv /venv && \
+RUN apk add --update nodejs npm && \
+  python -m venv /venv && \
   /venv/bin/pip install --upgrade pip && \
   /venv/bin/pip install -r /root/requirements.txt && \
   mkdir -p /data/app/static && \
